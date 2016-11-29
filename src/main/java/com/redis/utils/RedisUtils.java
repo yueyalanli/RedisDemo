@@ -1,12 +1,14 @@
 package com.redis.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
 /**
  * Created by lenovo on 2016/11/29.
  */
+@Service
 public class RedisUtils {
     @Autowired
     public ShardedJedisPool shardedJedisPool;
