@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by lenovo on 2016/11/29.
  */
-public class TeacherInfoServiceImpl implements TeacherInfoService {
+public class TeacherInfoServiceImpl implements TeacherInfoService{
     @Override
     public boolean insertTeacherInfo(List<String> teacherID) {
         return false;
