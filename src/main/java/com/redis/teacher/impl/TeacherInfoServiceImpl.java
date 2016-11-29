@@ -10,6 +10,7 @@ import java.util.List;
 public class TeacherInfoServiceImpl implements TeacherInfoService{
     @Override
     public boolean insertTeacherInfo(List<String> teacherID) {
+
         return false;
     }
 
