@@ -1,30 +1,36 @@
 package com.redis.student.impl;
 
-import com.redis.teacher.TeacherInfoService;
+import com.redis.student.StudentInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import redis.clients.jedis.ShardedJedisPool;
 
 import java.util.List;
 
 /**
  * Created by lenovo on 2016/11/29.
  */
-public class StudentInfoServiceImpl implements TeacherInfoService {
+@Service("StudentInfoService")
+public class StudentInfoServiceImpl implements StudentInfoService{
+    @Autowired
+    ShardedJedisPool shardedJedisPool;
+
+    public boolean insertStudentInfo(List<String> teacherID) {
+        return true;
+    }
+
     @Override
-    public boolean insertTeacherInfo(List<String> teacherID) {
+    public boolean delStudentInfo(List<String> teacherID) {
         return false;
     }
 
     @Override
-    public boolean delTeacherInfo(List<String> teacherID) {
+    public boolean editStudentInfo(String teacherID) {
         return false;
     }
 
     @Override
-    public boolean editTeacherInfo(String teacherID) {
-        return false;
-    }
-
-    @Override
-    public List<String> selectTeacherInfo(List<String> teacherID) {
+    public List<String> selectStudentInfo(List<String> teacherID) {
         return null;
     }
 }
