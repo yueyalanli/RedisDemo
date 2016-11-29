@@ -1,9 +1,9 @@
 package com.redis.student.impl;
 
 import com.redis.student.StudentInfoService;
+import com.redis.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.ShardedJedisPool;
 
 import java.util.List;
 
@@ -13,9 +13,10 @@ import java.util.List;
 @Service("StudentInfoService")
 public class StudentInfoServiceImpl implements StudentInfoService{
     @Autowired
-    ShardedJedisPool shardedJedisPool;
+    RedisUtils redisUtils;
 
     public boolean insertStudentInfo(List<String> teacherID) {
+        redisUtils.getShardedJeids().set("ke","test");
         return true;
     }
 
