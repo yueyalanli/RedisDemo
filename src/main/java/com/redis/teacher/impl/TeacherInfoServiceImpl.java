@@ -1,4 +1,4 @@
-package com.redis.student.impl;
+package com.redis.teacher.impl;
 
 import com.redis.teacher.TeacherInfoService;
 
