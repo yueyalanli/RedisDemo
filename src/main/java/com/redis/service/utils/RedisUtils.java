@@ -1,4 +1,4 @@
-package com.redis.utils;
+package com.redis.service.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

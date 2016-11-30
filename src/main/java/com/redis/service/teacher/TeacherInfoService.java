@@ -1,4 +1,4 @@
-package com.redis.teacher;
+package com.redis.service.teacher;
 
 import java.util.List;
 

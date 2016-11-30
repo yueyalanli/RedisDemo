@@ -1,9 +1,8 @@
-package com.redis.redisservice;
+package com.redis.service.redisservice;
 
-import com.redis.model.TeacherModel;
-import com.redis.utils.RedisUtils;
+import com.redis.service.model.TeacherModel;
+import com.redis.service.utils.RedisUtils;
 import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.ShardedJedisPool;
 
 /**
  * @Author 杨阳

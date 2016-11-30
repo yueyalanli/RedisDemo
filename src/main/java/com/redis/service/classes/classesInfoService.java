@@ -1,4 +1,4 @@
-package com.redis.classes;
+package com.redis.service.classes;
 
 /**
  * Created by Judy on 2016/11/29.
