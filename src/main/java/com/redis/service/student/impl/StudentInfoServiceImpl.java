@@ -149,4 +149,21 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         return flag;
     }
 
+    @Override
+    public List<String> LikeSearch(String keyLike) {
+        ObjectMapper mapper = new ObjectMapper();
+        ShardedJedis resource = null;
+        List<String> result = null;
+        try{
+            resource = redisUtils.getShardedJeids();
+            //使用 sscan 命令 迭代集合中的元素
+            result = resource.sscan("student",keyLike).getResult();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            redisUtils.returnResource(resource);
+        }
+        return result;
+    }
+
 }

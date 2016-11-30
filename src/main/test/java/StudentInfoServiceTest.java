@@ -69,5 +69,10 @@ public class StudentInfoServiceTest {
         String ids = "12123217";
         System.out.println("判断该学生是否在student表内："+studentInfoService.ifExitsts(ids));
     }
-    //
+    //模糊查询
+    @Test
+    public void TestLikeSearch(){
+        String keyLike = "1212";
+        System.out.println("按照‘ "+keyLike+" ’模糊查询结果："+studentInfoService.LikeSearch(keyLike).toString());
+    }
 }
