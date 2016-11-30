@@ -1,5 +1,6 @@
 package com.redis.service.student.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redis.service.model.StudentModel;
 import com.redis.service.student.StudentInfoService;
 import com.redis.service.utils.RedisUtils;
@@ -7,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.ShardedJedis;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by lenovo on 2016/11/29.
@@ -27,7 +30,8 @@ public class StudentInfoServiceImpl implements StudentInfoService{
 
             //将对应学号的 学生信息存入相关的String类型里
             for(StudentModel model:studentModels){
-                String studentInfo = new StringBuffer().append(model.getName()).append(","+model.getSex()).append(","+model.getClasses()).toString();
+                ObjectMapper mapper = new ObjectMapper();
+                String studentInfo = mapper.writeValueAsString(model);
                 //@@@@@@@@对字符串类型做setnx(当key不存在时插入)操作
                 infoFlag = resource.setnx(model.getSid(),studentInfo);
                 System.out.println("infoFlag:"+infoFlag);
@@ -53,7 +57,7 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         ShardedJedis resource = null;
         try{
             resource = redisUtils.getShardedJeids();
-            //@@@@@@对Set集合 进行删除操作
+            //对Set集合 进行删除操作
             for(String sid:Sids) {
                 //@@@@从Set集合中删除学号
                 delFlag = resource.srem("student", sid);
@@ -71,24 +75,78 @@ public class StudentInfoServiceImpl implements StudentInfoService{
         }
         return delFlag;
     }
-
+    //修改某学生信息
     @Override
-    public boolean editStudentInfo(String Sid,String editContent) {
+    public String editStudentInfo(String Sid,String editContent) {
+        String editFlag = null;
         ShardedJedis resource = null;
         try{
             resource =  redisUtils.getShardedJeids();
-            //@@@@@使用Set命令
-            resource.set(Sid,editContent);
+            //@@@@ShareJedis不支持修改 renamenx(old,new)的值，Jedis可以做此操作
+//            Jedis jedis = new Jedis("172.16.2.234",6379);
+//            jedis.renamenx();
+            //@@@@@使用Set命令 修改学生信息
+            editFlag = resource.set(Sid,editContent);
         }catch (Exception e){
             e.printStackTrace();
         }finally {
             redisUtils.returnResource(resource);
         }
-        return false;
+        return editFlag;
+    }
+//对学生信息做批量查询
+    @Override
+    public HashMap<String,String> selectStudentInfoByIds(List<String> Sids){
+        HashMap<String,String> studentHash = new HashMap<String, String>();
+        ShardedJedis resource = null;
+        try{
+            resource = redisUtils.getShardedJeids();
+            for(String sid:Sids) {
+                //@@@@使用get获取对应学生的信息
+                String StudentInfoById = resource.get(sid);
+                studentHash.put(sid,StudentInfoById);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            redisUtils.returnResource(resource);
+        }
+        return studentHash;
+    }
+    //获取所有的学生信息
+    @Override
+    public HashMap<String, String> selectAllStudentInfo() {
+        HashMap<String, String> allStudent = new HashMap<String, String>();
+        ShardedJedis resource = null;
+        try{
+            resource = redisUtils.getShardedJeids();
+            //@@@@使用smembers命令获取所有学生学号
+            Set<String> sids = resource.smembers("student");
+            for(String sid:sids){
+                String studentInfo = resource.get(sid);
+                allStudent.put(sid,studentInfo);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            redisUtils.returnResource(resource);
+        }
+        return allStudent;
+    }
+//查询某学生是否存在
+    @Override
+    public boolean ifExitsts(String sid) {
+        ShardedJedis resource = null;
+        boolean flag = false;
+        try{
+            resource = redisUtils.getShardedJeids();
+            flag = resource.exists(sid);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            redisUtils.returnResource(resource);
+        }
+        return flag;
     }
 
-    @Override
-    public List<String> selectStudentInfo(List<String> teacherID) {
-        return null;
-    }
 }
